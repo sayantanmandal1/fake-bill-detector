@@ -1,5 +1,5 @@
 # Use PyTorch official image with CUDA support if needed, or CPU-only version
-FROM pytorch/pytorch:2.2.2-cpu-py3.9
+FROM pytorch/pytorch:2.2.0-cpu
 
 # Set work directory
 WORKDIR /app
