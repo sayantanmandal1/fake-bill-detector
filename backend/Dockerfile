@@ -1,28 +1,29 @@
-# Use official Python image
-FROM python:3.10-slim
+# Use PyTorch official image with CUDA support if needed, or CPU-only version
+FROM pytorch/pytorch:2.2.2-cpu as base
 
-# Set working directory inside container
+# Set work directory
 WORKDIR /app
 
-# Copy backend code
-COPY . /app
-
-
-# Install system dependencies for Pillow and gdown
+# Install system dependencies (only if needed for Pillow/gdown)
 RUN apt-get update && apt-get install -y \
-    gcc \
     libglib2.0-0 \
     libsm6 \
     libxrender1 \
     libxext6 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-RUN pip install --upgrade pip
-RUN pip install torch torchvision fastapi uvicorn pillow gdown
+# Copy only dependency files first to leverage Docker layer caching
+COPY requirements.txt .
 
-# Expose port (Render uses 10000 by default, but your app may use 8000)
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the app
+COPY . .
+
+# Expose the app port
 EXPOSE 8000
 
-# Start command: run uvicorn with your main app module (adjust if your file is named differently)
+# Start app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
