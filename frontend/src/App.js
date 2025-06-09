@@ -20,7 +20,7 @@ function BillDetector() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/predict", {
+      const res = await fetch("https://fake-bill-detector.onrender.com/predict", {
         method: "POST",
         body: formData,
       });

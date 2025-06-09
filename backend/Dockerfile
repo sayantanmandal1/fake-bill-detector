@@ -5,7 +5,8 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Copy backend code
-COPY ./backend /app
+COPY . /app
+
 
 # Install system dependencies for Pillow and gdown
 RUN apt-get update && apt-get install -y \
